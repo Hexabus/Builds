@@ -40,6 +40,12 @@ the documents don't cover the question.
   cannot bridge: "artificial leg" vs the book's "ivory leg ... fashioned from the polished bone" (the rare word "artificial"
   outweighs everything) and "the Parsee in Ahab's boat crew" (Fedallah). The next real retrieval gain is embedding search
   (roadmap item 2). Tests share tests/retrieval_runner.py; questions live in tests/*_questions.tsv.
+  Models on Moby-Dick (results/compare_moby.md, 19 in-scope questions): Qwen3.5 4B 16 correct, 1 citation-only non-answer
+  ("[1]" for "what is a gam"), 1 wrong, 1 correct decline; SmolLM3 3B 15 correct, 4 wrong. Both rejected the 2 out-of-scope
+  questions. Failure modes seen: merging two conflicting passages ("Stubb, the third mate ... from Tisbury": one passage calls
+  Stubb the third mate, another says Flask of Tisbury is), arithmetic slips (SmolLM3: 16 dollars at two cents = "9,600"),
+  and confident invention when the passage is missing (SmolLM3 named the Parsee "Pip"; Qwen declined). Warm-cache loads
+  5-6 s; averages 22 s (SmolLM3) and 28 s (Qwen) per answer on 4 CPU cores.
 - Model behaviour (results/compare_django_*.md): when the needed passage is missing, models used to guess or invent
   (both made up a third fetch mode). The system prompt now forbids guessing and says to decline when a list/count is not fully
   named, and declines print no Sources list. Recheck on 9 questions: Qwen3.5 4B now declines the fetch-modes question and
