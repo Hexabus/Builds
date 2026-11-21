@@ -1,0 +1,23 @@
+# question<TAB>regex that must appear in a correct passage (empty = must be 'Not in my files')<TAB>expected answer
+what is the default value of CONN_MAX_AGE	CONN_MAX_AGE.{0,200}Default:\s*``0``	0
+what is the default value of DATA_UPLOAD_MAX_NUMBER_FIELDS	DATA_UPLOAD_MAX_NUMBER_FIELDS.{0,300}Default:\s*``1000``	1000
+what is the default value of SESSION_COOKIE_AGE	SESSION_COOKIE_AGE.{0,200}Default:\s*``1209600``	1209600 (2 weeks, in seconds)
+how long is PASSWORD_RESET_TIMEOUT by default	PASSWORD_RESET_TIMEOUT.{0,200}Default:\s*``259200``	259200 (3 days, in seconds)
+what is the default value of CSRF_COOKIE_NAME	CSRF_COOKIE_NAME.{0,200}Default:\s*``'csrftoken'``	'csrftoken'
+what is the default value of DEFAULT_FROM_EMAIL	DEFAULT_FROM_EMAIL.{0,200}Default:\s*``'webmaster@localhost'``	'webmaster@localhost'
+what is the default value of the TIME_ZONE setting	TIME_ZONE.{0,200}Default:\s*``'America/Chicago'``	'America/Chicago'
+what is the default value of X_FRAME_OPTIONS	X_FRAME_OPTIONS.{0,200}Default:\s*``'DENY'``	'DENY'
+what is the default value of SESSION_ENGINE	SESSION_ENGINE.{0,200}Default:\s*``'django\.contrib\.sessions\.backends\.db'``	'django.contrib.sessions.backends.db'
+what is the default value of DATA_UPLOAD_MAX_MEMORY_SIZE	DATA_UPLOAD_MAX_MEMORY_SIZE.{0,200}Default:\s*``2621440``	2621440 (2.5 MB)
+what is the default value of FILE_UPLOAD_MAX_MEMORY_SIZE	FILE_UPLOAD_MAX_MEMORY_SIZE.{0,200}Default:\s*``2621440``	2621440 (2.5 MB)
+what is the default value of SECURE_HSTS_SECONDS	SECURE_HSTS_SECONDS.{0,200}Default:\s*``0``	0
+what is a slug	slug\s+A\s+short\s+label\s+for\s+something	A short label containing only letters, numbers, underscores or hyphens; used in URLs
+what is a view	view\s+A\s+function\s+responsible\s+for\s+rendering\s+a\s+page	A function responsible for rendering a page
+when was Django 6.1 released	Django\s+6\.1\s+release\s+notes.{0,40}August\s+5,\s+2026	August 5, 2026
+which Python versions does Django 6.1 support	Django\s+6\.1\s+supports\s+Python\s+3\.12,\s+3\.13,\s+3\.14,\s+and\s+3\.15	Python 3.12, 3.13, 3.14 and 3.15
+what are the three fetch modes in Django 6.1	FETCH_ONE.{0,600}FETCH_PEERS.{0,600}FETCH_RAISE	FETCH_ONE, FETCH_PEERS and FETCH_RAISE
+what is the default fetch mode	``FETCH_ONE``,\s+the\s+default	FETCH_ONE
+what does the FETCH_PEERS fetch mode do	``FETCH_PEERS``\s+fetches\s+a\s+missing\s+field\s+for\s+all\s+instances	Fetches a missing field for all instances from the same QuerySet (like an on-demand prefetch_related)
+when is extended support for Django 6.1 expected to end	Extended\s+support\s+is\s+expected\s+to\s+end\s+in\s+December\s+2027	December 2027
+how do I configure a Flask blueprint		Not in my files.
+what is the recipe for chocolate chip cookies		Not in my files.

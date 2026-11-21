@@ -17,7 +17,14 @@ the documents don't cover the question.
 - NOT TESTED: `python -m cartridge setup` end to end, and the llama.cpp release download (GitHub API/assets were
   not reachable from the sandbox). The engine used in testing was built from source and copied to engine/linux-x64/.
   Asset names were taken from llama.cpp's release.yml (e.g. llama-bin-win-cpu-x64.zip, llama-<tag>-bin-ubuntu-x64.tar.gz).
-- Known retrieval gap: "what is a business day" misses the definition on p.1 (not in top 4); cause not investigated.
+- Known retrieval gap: "what is a business day" misses the definition on p.1 (not in top 4). Cause: "day" is dropped by the
+  >30%-of-passages filter, leaving "business", and BM25 favours passages that repeat the word over the one-line definition.
+- Large-corpus test: Django 6.1.3 docs (tests/fetch_django_docs.py downloads them from PyPI; 680 files, 10,187 passages,
+  builds in ~4 s). `python3 tests/test_django_questions.py`: 10/20 questions in top 4, 10 registered as XFAIL; out-of-scope
+  questions are rejected. Causes: one-character tokens ("6" and "1" in "6.1") are discarded, identifiers such as
+  DEFAULT_FROM_EMAIL are split into words (and "from" is a stopword), and definition questions lose to word-frequency.
+  A throwaway prototype (exact-phrase match for identifiers/versions + a boost for "X means"/glossary definitions) reached
+  17/20 on Django and 12/12 on FMLA; not applied yet.
 - `build` now fails (non-zero exit) when no source could be indexed; `compare` reports load/answer timings.
 - Test document is the Maine Paid Family and Medical Leave rules (tests/maine_fmla.pdf, 26 pages). Retrieval test:
   `python3 tests/test_fmla_questions.py` (builds a temp pack, 11/12 in top 4, 9/12 first; the business-day question is an xfail).
