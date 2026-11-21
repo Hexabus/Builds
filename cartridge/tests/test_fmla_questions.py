@@ -32,7 +32,7 @@ T = [
     ("what does Tier 1 benefits mean", r"“Tier\s+1\s+benefits”\s+means"),
     ("what is a business day", r"“Business\s+day”\s+means"),
 ]
-XFAIL = {"what is a business day"}  # definition (p.1) is not in the top 4; cause not investigated
+XFAIL = set()  # known retrieval misses (none right now; "what is a business day" was fixed by exact-definition matching)
 
 
 def main():

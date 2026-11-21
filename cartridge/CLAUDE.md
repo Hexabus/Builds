@@ -17,17 +17,22 @@ the documents don't cover the question.
 - NOT TESTED: `python -m cartridge setup` end to end, and the llama.cpp release download (GitHub API/assets were
   not reachable from the sandbox). The engine used in testing was built from source and copied to engine/linux-x64/.
   Asset names were taken from llama.cpp's release.yml (e.g. llama-bin-win-cpu-x64.zip, llama-<tag>-bin-ubuntu-x64.tar.gz).
-- Known retrieval gap: "what is a business day" misses the definition on p.1 (not in top 4). Cause: "day" is dropped by the
-  >30%-of-passages filter, leaving "business", and BM25 favours passages that repeat the word over the one-line definition.
+- Retrieval (store.search): keyword ranking (IDF-weighted coverage, BM25 tie-break) plus exact-match signals that go first
+  (store._exact_hits): (1) definitions of the asked-about term for "what is/does X [mean]" questions ("X" means ... or glossary
+  style), (2) passages containing an identifier from the question (SESSION_COOKIE_AGE, matched as the phrase "session cookie age",
+  literal spelling preferred), (3) passages containing a version number (6.1) plus another key term. Without these, "day" was
+  dropped by the >30%-of-passages filter and BM25 preferred passages repeating a word over its one-line definition; one-character
+  tokens ("6", "1" in "6.1") were discarded; identifiers were split into common words.
 - Large-corpus test: Django 6.1.3 docs (tests/fetch_django_docs.py downloads them from PyPI; 680 files, 10,187 passages,
-  builds in ~4 s). `python3 tests/test_django_questions.py`: 10/20 questions in top 4, 10 registered as XFAIL; out-of-scope
-  questions are rejected. Causes: one-character tokens ("6" and "1" in "6.1") are discarded, identifiers such as
-  DEFAULT_FROM_EMAIL are split into words (and "from" is a stopword), and definition questions lose to word-frequency.
-  A throwaway prototype (exact-phrase match for identifiers/versions + a boost for "X means"/glossary definitions) reached
-  17/20 on Django and 12/12 on FMLA; not applied yet.
+  builds in ~4 s). `python3 tests/test_django_questions.py`: 18/20 in top 4 (was 10/20 before exact matching), 12/20 first;
+  out-of-scope questions are still rejected. FMLA: 12/12 in top 4 (was 11/12). Remaining misses (XFAIL): the TIME_ZONE default
+  ("time zone" is an everyday phrase; the defining passage ranks ~10th) and "three fetch modes" (the list passage does not mention
+  "6.1"). Heuristics were tuned on these two documents only; re-check on other corpora.
+- Known model problems (see results/): with passages missing, SmolLM3 guesses or answers from memory and Qwen3.5 can invent
+  details (it made up a FETCH_ALL mode); "Not in my files." answers still print a Sources list.
 - `build` now fails (non-zero exit) when no source could be indexed; `compare` reports load/answer timings.
 - Test document is the Maine Paid Family and Medical Leave rules (tests/maine_fmla.pdf, 26 pages). Retrieval test:
-  `python3 tests/test_fmla_questions.py` (builds a temp pack, 11/12 in top 4, 9/12 first; the business-day question is an xfail).
+  `python3 tests/test_fmla_questions.py` (builds a temp pack, 12/12 in top 4, 10/12 first).
   Model comparison questions: tests/fmla_questions.txt, answer key: tests/fmla_answer_key.txt. The earlier DMSO test was removed.
 
 ## Rules

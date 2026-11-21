@@ -19,19 +19,13 @@ sys.path.insert(0, str(HERE.parent))
 from cartridge import ask, cli, store  # noqa: E402
 
 DOCS = HERE / "data" / "django_docs"
-# Known retrieval misses on this corpus (see CLAUDE.md): one-character tokens such as the "6" and "1" in
-# "6.1" are discarded, identifiers like DEFAULT_FROM_EMAIL are split into words, and definition-style
-# questions ("what is a slug") lose to passages that merely mention the word a lot.
+# Known retrieval misses on this corpus (see CLAUDE.md):
+#  - TIME_ZONE: "time zone" is an everyday phrase in these docs, so 170 passages match; the one that defines the
+#    setting ranks about 10th even after preferring passages that spell the identifier literally.
+#  - three fetch modes: the passage that lists FETCH_RAISE does not mention "6.1", so the version filter hides it
+#    and the question's words ("three", "fetch", "modes") are too common to single it out.
 XFAIL = {
-    "what is the default value of DATA_UPLOAD_MAX_NUMBER_FIELDS",
-    "what is the default value of SESSION_COOKIE_AGE",
-    "what is the default value of DEFAULT_FROM_EMAIL",
     "what is the default value of the TIME_ZONE setting",
-    "what is the default value of DATA_UPLOAD_MAX_MEMORY_SIZE",
-    "what is a slug",
-    "what is a view",
-    "when was Django 6.1 released",
-    "which Python versions does Django 6.1 support",
     "what are the three fetch modes in Django 6.1",
 }
 
