@@ -68,6 +68,16 @@ the documents don't cover the question.
 
 ## Roadmap (in order)
 1. Verify setup/ask/compare with real models (SmolLM3 3B = ggml-org/SmolLM3-3B-GGUF; Qwen3.5 4B GGUF repo: find on Hugging Face).
-2. Embedding-based retrieval alongside keywords (small embedding GGUF served by llama-server), stored in the pack DB.
+2. Embedding-based retrieval alongside keywords. TRIED, NOT BUILT (experiment, scripts not committed): bge-small-en-v1.5 Q8
+   (36 MB, ggml-org/bge-small-en-v1.5-Q8_0-GGUF) and nomic-embed-text-v1.5 Q8 served by llama-server `--embedding`
+   (/v1/embeddings, 384/768-dim vectors, plain-Python cosine). Cost: 12-15 passages/s with bge-small on 4 cores (Moby 2 min,
+   Django docs 14 min), 4 passages/s with nomic (Moby 8 min); bge-small accepts 512 tokens, so ~0.3% of code-heavy passages
+   need shortening. Results on FMLA + Moby-Dick + Django (51 questions): vector-only search is much weaker than keyword
+   (Moby 9/19 vs 17/19 in the top 4); naive rank fusion with the keyword list lowers recall; re-ranking the keyword candidates
+   with vectors (N=20, k0=5, weight 0.5) keeps top-4 recall at 49/51 (unchanged) and raises "ranked first" from 33 to 39.
+   It does not fix the vocabulary-gap misses ("artificial leg" vs "ivory leg"): the larger nomic model did no better, so model
+   size is not the limit. A cosine threshold cannot reject out-of-scope questions (best cookie-recipe passage 0.65 vs weakest
+   real question 0.64), so the keyword coverage gate must stay. Verdict: not worth a second model, a vector table and
+   ~12 min of indexing per 10k passages for +6 first-place ranks. Revisit only with a stronger recall problem or a GPU.
 3. Scanned-PDF support (OCR), better chunking.
 4. Optional LoRA adapter for tone/format. 5. Desktop UI wizard.
