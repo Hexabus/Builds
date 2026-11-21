@@ -33,6 +33,13 @@ the documents don't cover the question.
   other key term (without that condition, "private plan substitution" pushed the correct FMLA fee passage out of the top 4;
   blending ranks with reciprocal-rank fusion failed for the same reason: BM25 ranks 1-10 are nearly flat).
   Heuristics were tuned on these two documents only; re-check on other corpora. Rebuild packs after chunking changes.
+- Prose test (untuned): the full text of Moby-Dick (tests/fetch_moby_dick.py clones the public-domain text; 1.3 MB, 1,836
+  passages, builds in 0.1 s). `python3 tests/test_moby_questions.py`: 17/19 in top 4, 10/19 first. The ORIGINAL search and
+  chunker (before the exact-match work) scored exactly the same, so the heuristics neither help nor hurt on narrative prose; they
+  only matter for identifier-, version- and definition-style questions. Known misses (XFAIL) are vocabulary gaps keyword search
+  cannot bridge: "artificial leg" vs the book's "ivory leg ... fashioned from the polished bone" (the rare word "artificial"
+  outweighs everything) and "the Parsee in Ahab's boat crew" (Fedallah). The next real retrieval gain is embedding search
+  (roadmap item 2). Tests share tests/retrieval_runner.py; questions live in tests/*_questions.tsv.
 - Model behaviour (results/compare_django_*.md): when the needed passage is missing, models used to guess or invent
   (both made up a third fetch mode). The system prompt now forbids guessing and says to decline when a list/count is not fully
   named, and declines print no Sources list. Recheck on 9 questions: Qwen3.5 4B now declines the fetch-modes question and

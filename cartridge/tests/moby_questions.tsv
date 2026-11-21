@@ -1,0 +1,22 @@
+# question<TAB>regex that must appear in a correct passage (empty = must be 'Not in my files')<TAB>expected answer
+who is the landlord of the Spouter-Inn	Spouter\s+Inn:\W+Peter\s+Coffin	Peter Coffin
+what island was Queequeg a native of	Queequeg\s+was\s+a\s+native\s+of\s+Rokovoko	Rokovoko
+who is the chief mate of the Pequod	Starbuck,\s+the\s+chief\s+mate	Starbuck
+who is the third mate of the Pequod and where is he from	third\s+mate\s+was\s+Flask,\s+a\s+native\s+of\s+Tisbury	Flask, a native of Tisbury in Martha's Vineyard
+what is a gam	GAM\.\s+NOUN	A social meeting of two (or more) whaleships, generally on a cruising-ground
+how much is the gold doubloon worth according to Flask	worth\s+sixteen\s+dollars	sixteen dollars
+how many cigars could be bought with the doubloon at two cents each	nine\s+hundred\s+and\s+sixty\s+cigars	960 (nine hundred and sixty)
+what is Ahab's artificial leg made from	ivory\s+leg\s+had\s+at\s+sea\s+been\s+fashioned\s+from\s+the\s+polished\s+bone\s+of\s+the\s+sperm\s+whale	The polished bone of a sperm whale's jaw (ivory)
+who is the chaplain of the Whaleman's Chapel	famous\s+Father\s+Mapple	Father Mapple
+into what three books does Ishmael divide the whales	FOLIO\s+WHALE;\s+II\.\s+the\s+OCTAVO\s+WHALE;\s+III\.\s+the\s+DUODECIMO	Folio, Octavo and Duodecimo
+who is the blacksmith of the Pequod	Perth[^.]{0,80}blacksmith|blacksmith[^.]{0,80}Perth	Perth
+where is the harpooneer Tashtego from	Tashtego,\s+an\s+unmixed\s+Indian\s+from\s+Gay\s+Head	Gay Head (Martha's Vineyard)
+what is ambergris	ambergris\s+is\s+a\s+very\s+curious\s+substance|ambergris\s+is\s+but\s+the\s+French\s+compound\s+for\s+grey\s+amber	A very curious substance; the word is the French compound for grey amber
+in what year was Captain Coffin examined about ambergris by the House of Commons	in\s+1791\s+a\s+certain\s+Nantucket-born\s+Captain\s+Coffin	1791
+what line from Job opens the Epilogue	AND\s+I\s+ONLY\s+AM\s+ESCAPED\s+ALONE\s+TO\s+TELL\s+THEE	"And I only am escaped alone to tell thee"
+what is the title of chapter 22	CHAPTER\s+22\.\s+Merry\s+Christmas\.\s+At\s+length	Merry Christmas
+which ship does the Pequod meet in chapter 128	CHAPTER\s+128\.\s+The\s+Pequod\s+Meets\s+The\s+Rachel\.\s+Next\s+day	The Rachel
+what is the name of the Parsee in Ahab's boat crew	(?=.*Fedallah)(?=.*Parsee)	Fedallah
+who is the Pequod's second mate	Stubb,\s+the\s+second\s+mate	Stubb
+how do I configure a Flask blueprint		Not in my files.
+what is the recipe for chocolate chip cookies		Not in my files.
