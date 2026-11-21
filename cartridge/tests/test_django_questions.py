@@ -19,15 +19,7 @@ sys.path.insert(0, str(HERE.parent))
 from cartridge import ask, cli, store  # noqa: E402
 
 DOCS = HERE / "data" / "django_docs"
-# Known retrieval misses on this corpus (see CLAUDE.md):
-#  - TIME_ZONE: "time zone" is an everyday phrase in these docs, so 170 passages match; the one that defines the
-#    setting ranks about 10th even after preferring passages that spell the identifier literally.
-#  - three fetch modes: the passage that lists FETCH_RAISE does not mention "6.1", so the version filter hides it
-#    and the question's words ("three", "fetch", "modes") are too common to single it out.
-XFAIL = {
-    "what is the default value of the TIME_ZONE setting",
-    "what are the three fetch modes in Django 6.1",
-}
+XFAIL = set()  # known retrieval misses (none right now); a listed question that starts passing is reported as XPASS
 
 
 def load():

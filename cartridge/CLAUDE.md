@@ -24,10 +24,15 @@ the documents don't cover the question.
   dropped by the >30%-of-passages filter and BM25 preferred passages repeating a word over its one-line definition; one-character
   tokens ("6", "1" in "6.1") were discarded; identifiers were split into common words.
 - Large-corpus test: Django 6.1.3 docs (tests/fetch_django_docs.py downloads them from PyPI; 680 files, 10,187 passages,
-  builds in ~4 s). `python3 tests/test_django_questions.py`: 18/20 in top 4 (was 10/20 before exact matching), 12/20 first;
-  out-of-scope questions are still rejected. FMLA: 12/12 in top 4 (was 11/12). Remaining misses (XFAIL): the TIME_ZONE default
-  ("time zone" is an everyday phrase; the defining passage ranks ~10th) and "three fetch modes" (the list passage does not mention
-  "6.1"). Heuristics were tuned on these two documents only; re-check on other corpora.
+  builds in ~4 s). `python3 tests/test_django_questions.py`: 20/20 in top 4, 13/20 first (originally 10/20 and 4/20);
+  out-of-scope questions are still rejected. FMLA: 12/12 in top 4, 10/12 first (originally 11/12 and 9/12). No known misses left.
+  The last two fixes: (a) list-aware chunking (ingest._paragraphs): "Django provides three fetch modes:" plus its numbered items
+  stays in one passage (it used to be cut after item 2, so no passage named all three modes), (b) an identifier at the start of a
+  line, list item or directive (heading "``TIME_ZONE``", "2. ``FETCH_PEERS`` fetches...") counts as a defining occurrence and is
+  preferred, (c) a run of 3+ consecutive key words that appears verbatim is promoted, but only if the passage also contains every
+  other key term (without that condition, "private plan substitution" pushed the correct FMLA fee passage out of the top 4;
+  blending ranks with reciprocal-rank fusion failed for the same reason: BM25 ranks 1-10 are nearly flat).
+  Heuristics were tuned on these two documents only; re-check on other corpora. Rebuild packs after chunking changes.
 - Model behaviour (results/compare_django_*.md): when the needed passage is missing, models used to guess or invent
   (both made up a third fetch mode). The system prompt now forbids guessing and says to decline when a list/count is not fully
   named, and declines print no Sources list. Recheck on 9 questions: Qwen3.5 4B now declines the fetch-modes question and

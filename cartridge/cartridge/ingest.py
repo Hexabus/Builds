@@ -54,9 +54,33 @@ def read_pdf(path):
     return pages
 
 
+_ITEM = re.compile(r"(?:\d+[.)]|[-*•]|\(?[A-Za-z][.)])\s")  # "1. ", "- ", "a) "
+
+
+def _paragraphs(text, limit):
+    """Paragraphs, with a list kept in one piece together with the line that introduces it.
+
+    "Django provides three modes:" followed by items 1., 2., 3. (and their indented continuation
+    paragraphs) becomes one block, so a chunk boundary cannot cut the list after item 2. Blocks are
+    capped at `limit` characters; a longer list is split as before.
+    """
+    blocks, open_list = [], False
+    for raw in re.split(r"\n\s*\n", text):
+        p = raw.strip()
+        if not p:
+            continue
+        item, cont = bool(_ITEM.match(p)), raw[:1].isspace()
+        if blocks and open_list and (item or cont) and len(blocks[-1]) + len(p) + 2 <= limit:
+            blocks[-1] += "\n\n" + p
+        else:
+            blocks.append(p)
+            open_list = p.endswith(":") or item
+    return blocks
+
+
 def chunk(text, loc_prefix="", size=900, overlap=150):
     """Split on paragraphs, pack to ~size chars, carry a little overlap."""
-    paras = [p.strip() for p in re.split(r"\n\s*\n", text) if p.strip()]
+    paras = _paragraphs(text, size * 1.5)
     chunks, buf, n = [], "", 1
     for p in paras:
         while len(p) > size * 1.5:  # very long paragraph: hard split

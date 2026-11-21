@@ -98,8 +98,27 @@ def _exact_hits(db, question, keep, limit=20):
         found = _fetch(db, " OR ".join([ph] + [f'"{t}"' for t in keep]), 200, restrict=ph)
         # FTS sees "TIME_ZONE" as the words "time zone"; passages that spell the identifier literally win
         lits = [m.group(0) for m in _IDENT.finditer(question)]
-        found.sort(key=lambda r: not all(l in r[2] for l in lits))  # stable: BM25 order kept within groups
+        def spelled(r):  # 0: identifier starts a line (heading, list item, directive: a defining occurrence),
+            #                1: appears literally, 2: only as words
+            if all(re.search(r"^[ \t]*(?:(?:\d+[.)]|[-*•])[ \t]+|\.\.[ \t]+\w+::[ \t]+)?\W*" + re.escape(l) + r"(?!\w)",
+                             r[2], re.M) for l in lits):
+                return 0
+            return 1 if all(l in r[2] for l in lits) else 2
+        found.sort(key=spelled)  # stable: BM25 order kept within groups
         hits += found[:limit]
+    # A run of 3+ consecutive key words that appears verbatim ("three fetch modes") is promoted only when the passage
+    # also contains every other key term: topic phrases alone ("private plan substitution") match the wrong passages.
+    run, promoted = [], 0
+    for w in re.findall(r"[a-z0-9]+", question.lower()) + [None]:
+        if w is not None and w not in STOP:
+            run.append(w)
+            continue
+        if len(run) >= 3:
+            for n, l, t in _fetch(db, _phrase(run), limit):
+                if promoted < 3 and keep and _coverage(keep, t) >= 0.999:
+                    hits.append((n, l, t))
+                    promoted += 1
+        run = []
     versions = [_phrase(v.group(0).split(".")) for v in _VERSION.finditer(question)]
     if versions and keep:  # a version number alone is weak; require another key term too
         hits += _fetch(db, " AND ".join(versions) + " AND (" + " OR ".join(f'"{t}"' for t in keep) + ")", limit)
