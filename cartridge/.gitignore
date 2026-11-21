@@ -1,0 +1,7 @@
+# Cartridge packs, downloaded engines/models and local test data are not committed
+__pycache__/
+*.pyc
+*Pack/
+*.gguf
+*.part
+engine/
