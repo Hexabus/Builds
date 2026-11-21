@@ -38,6 +38,10 @@ the documents don't cover the question.
   named, and declines print no Sources list. Recheck on 9 questions: Qwen3.5 4B now declines the fetch-modes question and
   stays correct on the rest; SmolLM3 3B still invents "FETCH_MANY" there (but no longer loops, and answers 8 of the other 8
   sensibly). Small models obey "don't guess" imperfectly: do not rely on the prompt alone, keep improving retrieval.
+  Final run after the chunking/retrieval fixes (results/compare_django_final.md, all 22 questions): Qwen3.5 4B 20/20 in-scope
+  answers correct; SmolLM3 3B 18/20 (muddled TIME_ZONE answer that first says "None"; pasted an unrelated passage for the 6.1
+  release date) and it now names all three fetch modes correctly. Both reject the two out-of-scope questions. Cold load
+  58 s / 103 s (SmolLM3 / Qwen), average answer 19 s / 27 s on 4 CPU cores.
 - `build` now fails (non-zero exit) when no source could be indexed; `compare` reports load/answer timings.
 - Test document is the Maine Paid Family and Medical Leave rules (tests/maine_fmla.pdf, 26 pages). Retrieval test:
   `python3 tests/test_fmla_questions.py` (builds a temp pack, 12/12 in top 4, 10/12 first).
