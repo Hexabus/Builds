@@ -28,8 +28,11 @@ the documents don't cover the question.
   out-of-scope questions are still rejected. FMLA: 12/12 in top 4 (was 11/12). Remaining misses (XFAIL): the TIME_ZONE default
   ("time zone" is an everyday phrase; the defining passage ranks ~10th) and "three fetch modes" (the list passage does not mention
   "6.1"). Heuristics were tuned on these two documents only; re-check on other corpora.
-- Known model problems (see results/): with passages missing, SmolLM3 guesses or answers from memory and Qwen3.5 can invent
-  details (it made up a FETCH_ALL mode); "Not in my files." answers still print a Sources list.
+- Model behaviour (results/compare_django_*.md): when the needed passage is missing, models used to guess or invent
+  (both made up a third fetch mode). The system prompt now forbids guessing and says to decline when a list/count is not fully
+  named, and declines print no Sources list. Recheck on 9 questions: Qwen3.5 4B now declines the fetch-modes question and
+  stays correct on the rest; SmolLM3 3B still invents "FETCH_MANY" there (but no longer loops, and answers 8 of the other 8
+  sensibly). Small models obey "don't guess" imperfectly: do not rely on the prompt alone, keep improving retrieval.
 - `build` now fails (non-zero exit) when no source could be indexed; `compare` reports load/answer timings.
 - Test document is the Maine Paid Family and Medical Leave rules (tests/maine_fmla.pdf, 26 pages). Retrieval test:
   `python3 tests/test_fmla_questions.py` (builds a temp pack, 12/12 in top 4, 10/12 first).
