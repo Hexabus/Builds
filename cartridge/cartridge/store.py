@@ -51,7 +51,7 @@ def _coverage(terms, text):
 def search(db, question, k=4):
     """Return [(coverage, source_name, loc, text)], best first.
 
-    Terms found in >30% of passages (e.g. "DMSO" in a book about DMSO) carry no signal, so
+    Terms found in >30% of passages (e.g. "leave" in a rulebook about leave) carry no signal, so
     they are dropped from matching when other terms remain. Passages are ranked by the
     IDF-weighted share of the question's terms they contain; BM25 breaks ties.
     coverage (0..1) is that weighted share, used by the caller to decide "not in my files".

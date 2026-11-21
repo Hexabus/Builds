@@ -23,7 +23,7 @@ Compare models on the same questions:
 
     python3 -m cartridge setup MyPack --model smollm3
     python3 -m cartridge setup MyPack --model qwen --model-repo OWNER/REPO-GGUF
-    python3 -m cartridge compare MyPack dmso_questions.txt -m smollm3,qwen   # writes compare.md
+    python3 -m cartridge compare MyPack tests/fmla_questions.txt -m smollm3,qwen   # writes compare.md
 
 ## Modes
 - **Search-only (default):** returns the best matching passages with source + location. If the files don't cover the question: "Not in my files."
