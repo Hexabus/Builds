@@ -16,8 +16,13 @@ MIN_COVERAGE = 0.4  # passage must contain >=40% of the question's key terms
 
 SYSTEM = (
     "You answer ONLY from the numbered passages provided. If they do not contain the "
-    "answer, reply exactly: Not in my files. Cite passages like [1]. Be brief."
+    "answer, reply exactly: Not in my files. "
+    "Never guess, infer or use outside knowledge. If the question asks for a specific list or "
+    "number of items (for example \"the three modes\") and the passages do not name every one, "
+    "reply exactly: Not in my files. Cite passages like [1]. Be brief."
 )
+
+DECLINE = "Not in my files."
 
 
 def _llm(endpoint, model, question, hits):
@@ -49,6 +54,8 @@ def answer(db, manifest, question, k=4, endpoint=None):
     if endpoint:
         try:
             text = _llm(endpoint, manifest.get("llm_model"), question, hits)
+            if re.search(r"not in my files\.?\s*$", text, re.I):  # a decline needs no sources list
+                return DECLINE, []
             src = "\n".join(f"  [{i}] {h[1]}, {h[2]}" for i, h in enumerate(hits, 1))
             return f"{text}\n\nSources:\n{src}", hits
         except Exception as e:  # model server not running -> degrade gracefully
